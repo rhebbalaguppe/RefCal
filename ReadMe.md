@@ -2,7 +2,7 @@
 
 # Source Code for the paper:
 
-# Enhancing Deep Neural Network Reliability with Refinement and Calibration
+# Enhancing Deep Neural Network Reliability with Refinement and Calibration (ICLR 2026 Workshop on Trustworthy AI)
 
 ## We optimize both Refinement and Calibration to enhance reliability of DNN classifiers:
 
