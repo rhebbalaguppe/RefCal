@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReadMeRefCal.md</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="source-code-for-the-paper">Source Code for the paper:</h1>
+<h1 id="">Enhancing Deep Neural Network Reliability with Refinement and Calibration
+</h1>
+<h2 id="jointly-optimizing-refinement-and-calibration">We optimize both Refinement and Calibration to enhance reliability of DNN classifiers:</h2>
+<p>We intend to develop a strategy to train reliable DNN models that demonstrate high refinement, high accuracy, and good calibration (i.e., low calibration error), all at the same time. We describe our proposed framework, named RefCal. RefCal comprises two stages: (1) pretraining an encoder network to enforce refinement via contrastive training; (2) In the second stage we fine-tune a classifier head with the frozen encoder based on the non-contrastive losses for calibration and accuracy. The model thus trained achieves good refinement, calibration, and accuracy at the same time. We have experimented with various loss functions to achieve high accuracy and calibration in the second stage.</p>
+<h2 id="requirements">Requirements:</h2>
+<p>We have tested our implementation of Refcal on the following environment:</p>
+<ul>
+<li>Python 3.8.16 / Pytorch (&gt;=1.8.0) / torchvision (&gt;=0.9.0) / CUDA 11.3</li>
+</ul>
+<h2 id="training">Training:</h2>
+<p>Please refer to the supplementary for hyperparameters.</p>
+<h3 id="training-stage-1-refinement">Training Stage 1 (Refinement):</h3>
+<p>To train a stage 1 model (say ResNet-50) on CIFAR-100 dataset , run the following command:</p>
+<pre><code>python main_refcal.py --batch_size 1024 \
+  --learning_rate 0.5 \
+  --dataset cifar100
+  --temp 0.1 \
+  --cosine
+</code></pre>
+<h3 id="training-stage-2-calibration-and-classification">Training Stage 2 (Calibration and Classification):</h3>
+<p>We illustrate three examples on how to incorporate calibration as shown below:</p>
+<p><em>Example 1: FL+MDCA</em></p>
+<p>To train a classifier using a pretrained Stage1 model (ResNet-50) using <em>FL+MDCA</em> loss function to calibrate on CIFAR-100 dataset, run the following command:</p>
+<pre><code>python main_linear.py --batch_size 512 \
+  --learning_rate 5 \
+  --dataset cifar100
+  --loss_function FL+MDCA \
+  --gamma 2\ 
+  --ckpt /path/to/stage1_model.pth
+</code></pre>
+<p><em>Example 2: MBLS</em></p>
+<p>To train a classifier using a pretrained Stage1 model (ResNet-50) using <em>Cross Entropy+MBLS</em> loss function to calibrate on CIFAR-100 dataset, run the following command:</p>
+<pre><code>python main_linear.py --batch_size 512 \
+  --learning_rate 5 \
+  --dataset cifar100
+  --loss_function MBLS \
+  --alpha 0.01\ 
+  --ckpt /path/to/stage1_model.pth
+</code></pre>
+<p><em>Example 3: LogitNorm</em></p>
+<p>To train a classifier using a pretrained Stage1 model (ResNet-50) using <em>LogitNorm</em> loss function to calibrate on CIFAR-100 dataset , run the following command:</p>
+<pre><code>python main_linear.py --batch_size 512 \
+  --learning_rate 5 \
+  --dataset cifar100
+  --loss_function logit_norm \
+  --temp 0.01\ 
+  --ckpt /path/to/stage1_model.pth
+</code></pre>
+<p>You can plugin any values you like for <code>--alpha</code> (smoothing weight <span class="katex--inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.43056em; vertical-align: 0em;"></span><span class="mord mathnormal" style="margin-right: 0.0037em;">α</span></span></span></span></span>) and <code>--gamma</code> (focusing parameters <span class="katex--inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.625em; vertical-align: -0.19444em;"></span><span class="mord mathnormal" style="margin-right: 0.05556em;">γ</span></span></span></span></span>) arguments.</p>
+</div>
+</body>
+
+</html>
